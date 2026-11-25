@@ -53,3 +53,10 @@ Data (`db.json`, screenshots, logos and uploads) lives in `DATA_DIR`. Writes are
 ## Branding
 
 The UnifyApps logo is at `client/public/brand/unifyapps-logo.svg`. Replace it with your official asset if needed.
+
+## Private claude.ai edition (no server, no API key)
+
+`artifact/` is the same platform packaged as a private claude.ai Artifact. claude.ai hosts it, stores the data, provides Claude (no API key) and handles access. Only the owner can open it until they share it from claude.ai.
+
+* Build: `npm run build:artifact` → `artifact/dist/use-case-universe.html` (one self-contained page). Publish it with Claude Code's Artifact tool to the same URL to update it.
+* Differences from the server edition: Claude can't open prototype links itself, so it builds each profile from the link, your notes and an optional screenshot. Customer logos are uploaded. Videos and decks are uploaded (up to 20 MB) or linked, and links open in a new tab because claude.ai doesn't allow embeds.

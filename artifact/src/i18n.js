@@ -1,0 +1,92 @@
+import { createContext, useContext } from "react";
+
+const en = { "brand_title": "Use Case Universe", "private_badge": "Private · only you", "private_tip": "Only you can open this page until you share it", "names_shown": "Names shown", "anon_client": "{v} client", "hero_sub": "Paste a prototype link. Claude classifies it, maps the industries, estimates the ROI and writes the profile in English and Arabic. Add a screenshot for an even sharper profile.", "shot_title": "Paste, drop or choose a screenshot", "shot_sub": "of the prototype. Claude reads it to build a richer profile.", "shot_pasted": "Pasted screenshot", "shot_change": "click to change", "shot_wrong_type": "Choose an image file (PNG, JPG, WebP or GIF).", "shot_too_large": "That screenshot is over 20 MB. Use a smaller image.", "remove": "Remove", "toast_building": "Claude is building the profile…", "toast_rerun": "Agents re-running…", "toast_deleted": "Use case deleted", "toast_saved": "Saved", "toast_exported": "CSV saved", "toast_examples_removed": "Examples removed", "store_unavailable": "Your saved use cases could not be loaded. Make sure you are signed in to claude.ai, then reload the page.", "footer_ai": "Agents powered by Claude", "footer_keyword": "Keyword mode", "example": "Example", "watch": "Watch", "open": "Open", "confirm_remove": "Yes, remove", "confirm_delete": "Yes, delete", "close": "Close", "max_20mb": "up to 20 MB", "file_too_large": "That file is over 20 MB. Add it as a link instead.", "roi_headline": "ROI headline", "usd_year": "USD per year", "payback_months": "Payback (months)", "payback": "payback", "keyword": "keyword", "step_scout": "reading the link", "step_analyst": "type, summary & verticals", "step_roi": "value estimate", "step_brand": "customer", "step_graph": "linking context", "gap_verticals": "verticals with no use case", "ok": "ok", "failed_n": "failed", "live": "live", "assets": "Assets", "open_profile": "Open profile", "connections": "connections", "act_added": "Added", "act_profiled": "Profiled", "act_failed": "Failed", "act_asset": "Asset added", "act_deleted": "Deleted", "ask_not_granted": "Claude access is turned off for this page. Allow it in the page's Permissions menu.", "ask_busy": "Claude is busy right now. Try again in a minute.", "ask_failed": "The Ask agent could not answer. Try again.", "privacy_title": "Privacy", "privacy_sub": "This page is private to your claude.ai account. Your team and customers cannot open it unless you share it from claude.ai.", "ai_on_artifact": "Connected through your claude.ai account. No API key needed.", "ai_off_artifact": "Claude is not available in this view, so the agents use keyword matching.", "examples_title": "Example use cases", "examples_sub": "{n} example use cases are here to show how the page works. Remove them when you have added your own.", "remove_examples": "Remove examples", "link_placeholder": "YouTube, Loom, Google Slides or PDF link (https://…)", "empty_sub": "Paste your first prototype link above and watch Claude build its profile.",
+  nav_dashboard: "Showcase", nav_tower: "Control Tower", nav_graph: "Context Graph", nav_ask: "Ask AI", nav_settings: "Settings",
+  hero_kicker: "UnifyApps · Use Case Universe",
+  hero_title_1: "Every use case.", hero_title_2: "One intelligent universe.",
+  drop_placeholder: "Paste a prototype link — e.g. https://demo.unifyapps.com/kyc-agent",
+  drop_cta: "Build profile", drop_more: "Add context (optional)", customer_hint: "Customer name (optional)",
+  notes_hint: "Notes for the agents (optional)", confidential: "Mark as confidential",
+  kpi_usecases: "Use cases", kpi_verticals: "Verticals covered", kpi_customers: "Customers", kpi_value: "Est. annual value", kpi_hours: "Hours saved / yr", kpi_payback: "Avg. payback",
+  search: "Search use cases, capabilities, systems…", all_verticals: "All verticals", all_types: "All types", all_stages: "All stages", all_customers: "All customers",
+  sort_new: "Newest", sort_value: "Highest value", sort_az: "A → Z", clear: "Clear", results: "results",
+  empty_title: "Your universe is empty", open_prototype: "Open prototype", processing: "Agents at work", failed: "Needs attention", ready: "Ready",
+  months: "mo", per_year: "/ yr", est: "estimate",
+  detail_overview: "Overview", detail_problem: "Problem", detail_capabilities: "Capabilities", detail_integrations: "Systems & integrations", detail_personas: "Personas",
+  detail_roi: "Expected ROI", detail_assumptions: "Assumptions", detail_assets: "Videos, decks & notes", detail_pipeline: "Agent workflow",
+  add_video: "Video", add_deck: "Deck", add_note: "Note", add_link: "Add by link", upload: "Upload file", save: "Save", cancel: "Cancel",
+  edit: "Edit", delete: "Delete", rerun: "Re-run agents", customer: "Customer", stage: "Stage", type: "Type", verticals: "Verticals",
+  title: "Title", summary: "Summary", upload_logo: "Upload logo", note_placeholder: "Write a note…", tower_title: "Control Tower", tower_sub: "Exactly what you have — coverage, value, maturity and gaps at a glance.",
+  by_vertical: "Use cases by vertical", by_type: "By type", by_stage: "Maturity pipeline", value_by_vertical: "Estimated value by vertical", top_systems: "Top systems",
+  activity: "Live activity", agents_health: "Agent fleet", gaps: "Gaps to close", gap_assets: "without a video or deck", gap_customer: "without a customer",
+  all_items: "All use cases", export: "Export CSV",
+  graph_title: "Context Graph", graph_sub: "How use cases, industries, customers and systems connect. Drag to orbit, scroll to zoom, click a node.",
+  legend_usecase: "Use case", legend_vertical: "Vertical", legend_type: "Type", legend_customer: "Customer", legend_integration: "System",
+  ask_title: "Ask the universe", ask_sub: "Enterprise search across every use case, customer, ROI and note.",
+  ask_placeholder: "e.g. Which banking use cases have the fastest payback?", ask_send: "Ask",
+  ask_examples: ["What do we have for Government?", "Top 3 use cases by estimated value", "Which use cases integrate with Salesforce?", "Where are our coverage gaps?"],
+  ask_keyword: "Keyword mode — add an Anthropic API key for full AI answers",
+  settings_title: "Settings", hide_customers: "Hide customer names & logos", hide_customers_sub: "Customer-facing mode: every name becomes an anonymous label like “Banking client”, everywhere — including AI answers.",
+  admin_token: "Admin key", admin_token_sub: "Required to add or edit use cases on this deployment.", ai_status: "AI agents", ai_on: "Connected", ai_off: "Not configured — running in keyword mode",
+  viewer_mode: "Viewer mode", hidden_badge: "Names hidden", lang: "العربية", theme: "Theme",
+  agent_scout: "Scout", agent_analyst: "Analyst", agent_roi: "ROI", agent_brand: "Brand", agent_graph: "Graph",
+  confidence: "Confidence", low: "Low", medium: "Medium", high: "High", featured: "Featured",
+};
+
+const ar = { "brand_title": "عالم حالات الاستخدام", "private_badge": "خاص · أنت فقط", "private_tip": "لا يمكن لأحد غيرك فتح هذه الصفحة حتى تشاركها", "names_shown": "الأسماء ظاهرة", "anon_client": "عميل في قطاع {v}", "hero_sub": "ألصق رابط النموذج الأولي، وسيصنّفه Claude ويحدد القطاعات ويقدّر العائد على الاستثمار ويكتب الملف بالعربية والإنجليزية. أضف لقطة شاشة لملف أدق.", "shot_title": "ألصق أو اسحب أو اختر لقطة شاشة", "shot_sub": "للنموذج الأولي، ليقرأها Claude ويبني ملفاً أغنى.", "shot_pasted": "لقطة شاشة ملصقة", "shot_change": "انقر للتغيير", "shot_wrong_type": "اختر ملف صورة (PNG أو JPG أو WebP أو GIF).", "shot_too_large": "حجم اللقطة يتجاوز ٢٠ ميغابايت. استخدم صورة أصغر.", "remove": "إزالة", "toast_building": "يقوم Claude ببناء الملف…", "toast_rerun": "يعيد الوكلاء العمل…", "toast_deleted": "تم حذف حالة الاستخدام", "toast_saved": "تم الحفظ", "toast_exported": "تم حفظ ملف CSV", "toast_examples_removed": "تمت إزالة الأمثلة", "store_unavailable": "تعذر تحميل حالات الاستخدام المحفوظة. تأكد من تسجيل الدخول إلى claude.ai ثم أعد تحميل الصفحة.", "footer_ai": "الوكلاء يعملون بواسطة Claude", "footer_keyword": "وضع الكلمات المفتاحية", "example": "مثال", "watch": "شاهد", "open": "افتح", "confirm_remove": "نعم، أزل", "confirm_delete": "نعم، احذف", "close": "إغلاق", "max_20mb": "حتى ٢٠ ميغابايت", "file_too_large": "حجم الملف يتجاوز ٢٠ ميغابايت. أضفه كرابط بدلاً من ذلك.", "roi_headline": "عنوان العائد", "usd_year": "دولار سنوياً", "payback_months": "الاسترداد (أشهر)", "payback": "الاسترداد", "keyword": "كلمات مفتاحية", "step_scout": "قراءة الرابط", "step_analyst": "النوع والملخص والقطاعات", "step_roi": "تقدير القيمة", "step_brand": "العميل", "step_graph": "ربط السياق", "gap_verticals": "قطاعات بلا حالات استخدام", "ok": "ناجح", "failed_n": "فشل", "live": "قيد التنفيذ", "assets": "المرفقات", "open_profile": "افتح الملف", "connections": "روابط", "act_added": "أضيف", "act_profiled": "اكتمل الملف", "act_failed": "فشل", "act_asset": "أضيف مرفق", "act_deleted": "حُذف", "ask_not_granted": "وصول Claude متوقف لهذه الصفحة. فعّله من قائمة الأذونات في الصفحة.", "ask_busy": "Claude مشغول حالياً. حاول بعد دقيقة.", "ask_failed": "تعذرت الإجابة. حاول مرة أخرى.", "privacy_title": "الخصوصية", "privacy_sub": "هذه الصفحة خاصة بحسابك في claude.ai. لا يمكن لفريقك أو عملائك فتحها إلا إذا شاركتها من claude.ai.", "ai_on_artifact": "متصل عبر حسابك في claude.ai، دون الحاجة إلى مفتاح API.", "ai_off_artifact": "Claude غير متاح في هذا العرض، لذا يستخدم الوكلاء مطابقة الكلمات المفتاحية.", "examples_title": "أمثلة حالات الاستخدام", "examples_sub": "توجد {n} أمثلة لتوضيح طريقة عمل الصفحة. أزلها بعد إضافة حالاتك.", "remove_examples": "إزالة الأمثلة", "link_placeholder": "رابط يوتيوب أو لوم أو عرض Google أو PDF (https://…)", "empty_sub": "ألصق أول رابط بالأعلى وشاهد Claude يبني ملفه.",
+  nav_dashboard: "المعرض", nav_tower: "برج التحكم", nav_graph: "خريطة السياق", nav_ask: "اسأل الذكاء الاصطناعي", nav_settings: "الإعدادات",
+  hero_kicker: "يونيفاي آبس · عالم حالات الاستخدام",
+  hero_title_1: "كل حالة استخدام.", hero_title_2: "في عالم ذكي واحد.",
+  drop_placeholder: "ألصق رابط النموذج الأولي هنا", drop_cta: "أنشئ الملف", drop_more: "أضف سياقاً (اختياري)", customer_hint: "اسم العميل (اختياري)",
+  notes_hint: "ملاحظات للوكلاء (اختياري)", confidential: "تمييز كسرّي",
+  kpi_usecases: "حالات الاستخدام", kpi_verticals: "القطاعات المغطاة", kpi_customers: "العملاء", kpi_value: "القيمة السنوية المقدّرة", kpi_hours: "ساعات موفرة سنوياً", kpi_payback: "متوسط الاسترداد",
+  search: "ابحث في حالات الاستخدام والقدرات والأنظمة…", all_verticals: "كل القطاعات", all_types: "كل الأنواع", all_stages: "كل المراحل", all_customers: "كل العملاء",
+  sort_new: "الأحدث", sort_value: "الأعلى قيمة", sort_az: "أبجدياً", clear: "مسح", results: "نتيجة",
+  empty_title: "عالمك فارغ", open_prototype: "افتح النموذج", processing: "الوكلاء يعملون", failed: "يحتاج انتباهاً", ready: "جاهز",
+  months: "شهر", per_year: "/ سنة", est: "تقدير",
+  detail_overview: "نظرة عامة", detail_problem: "المشكلة", detail_capabilities: "القدرات", detail_integrations: "الأنظمة والتكاملات", detail_personas: "المستخدمون",
+  detail_roi: "العائد المتوقع", detail_assumptions: "الافتراضات", detail_assets: "الفيديو والعروض والملاحظات", detail_pipeline: "سير عمل الوكلاء",
+  add_video: "فيديو", add_deck: "عرض", add_note: "ملاحظة", add_link: "أضف برابط", upload: "ارفع ملفاً", save: "حفظ", cancel: "إلغاء",
+  edit: "تعديل", delete: "حذف", rerun: "أعد تشغيل الوكلاء", customer: "العميل", stage: "المرحلة", type: "النوع", verticals: "القطاعات",
+  title: "العنوان", summary: "الملخص", upload_logo: "ارفع الشعار", note_placeholder: "اكتب ملاحظة…", tower_title: "برج التحكم", tower_sub: "كل ما لديك بدقة — التغطية والقيمة والنضج والفجوات بنظرة واحدة.",
+  by_vertical: "حالات الاستخدام حسب القطاع", by_type: "حسب النوع", by_stage: "مراحل النضج", value_by_vertical: "القيمة المقدّرة حسب القطاع", top_systems: "أبرز الأنظمة",
+  activity: "النشاط المباشر", agents_health: "أسطول الوكلاء", gaps: "فجوات يجب سدّها", gap_assets: "بدون فيديو أو عرض", gap_customer: "بدون عميل",
+  all_items: "كل حالات الاستخدام", export: "تصدير CSV",
+  graph_title: "خريطة السياق", graph_sub: "كيف تترابط حالات الاستخدام والقطاعات والعملاء والأنظمة. اسحب للدوران ومرّر للتكبير وانقر على أي عقدة.",
+  legend_usecase: "حالة استخدام", legend_vertical: "قطاع", legend_type: "نوع", legend_customer: "عميل", legend_integration: "نظام",
+  ask_title: "اسأل العالم", ask_sub: "بحث مؤسسي عبر كل حالات الاستخدام والعملاء والعائد والملاحظات.",
+  ask_placeholder: "مثال: ما حالات الاستخدام المصرفية ذات أسرع استرداد؟", ask_send: "اسأل",
+  ask_examples: ["ماذا لدينا للقطاع الحكومي؟", "أعلى ٣ حالات من حيث القيمة", "أي الحالات تتكامل مع Salesforce؟", "أين فجوات التغطية لدينا؟"],
+  ask_keyword: "وضع الكلمات المفتاحية — أضف مفتاح Anthropic لإجابات ذكية كاملة",
+  settings_title: "الإعدادات", hide_customers: "إخفاء أسماء العملاء وشعاراتهم", hide_customers_sub: "وضع العرض للعملاء: يتحول كل اسم إلى وصف مجهول مثل «عميل مصرفي» في كل مكان، بما في ذلك إجابات الذكاء الاصطناعي.",
+  admin_token: "مفتاح المسؤول", admin_token_sub: "مطلوب لإضافة حالات الاستخدام أو تعديلها.", ai_status: "وكلاء الذكاء الاصطناعي", ai_on: "متصل", ai_off: "غير مهيأ — يعمل بوضع الكلمات المفتاحية",
+  viewer_mode: "وضع المشاهدة", hidden_badge: "الأسماء مخفية", lang: "English", theme: "المظهر",
+  agent_scout: "المستكشف", agent_analyst: "المحلل", agent_roi: "العائد", agent_brand: "الهوية", agent_graph: "الخريطة",
+  confidence: "الثقة", low: "منخفضة", medium: "متوسطة", high: "عالية", featured: "مميز",
+};
+
+// Taxonomy labels in Arabic (data stays in English; only display is translated).
+export const TAX_AR = {
+  Government: "الحكومة", Banking: "البنوك", Insurance: "التأمين", "Financial Services": "الخدمات المالية", Education: "التعليم",
+  Healthcare: "الرعاية الصحية", Telecom: "الاتصالات", Retail: "التجزئة", "Energy & Utilities": "الطاقة والمرافق", Manufacturing: "التصنيع",
+  Logistics: "الخدمات اللوجستية", "Real Estate": "العقارات", "Hospitality & Travel": "الضيافة والسفر", Media: "الإعلام", Technology: "التقنية", "Cross-industry": "متعدد القطاعات",
+  "Agentic AI": "الذكاء الاصطناعي الوكيلي", "Conversational AI": "الذكاء الاصطناعي المحادثي", "Workflow Automation": "أتمتة سير العمل", "Document Intelligence": "ذكاء المستندات",
+  "Data Integration": "تكامل البيانات", "Analytics & Insights": "التحليلات والرؤى", "Customer Experience": "تجربة العملاء", "Employee Experience": "تجربة الموظفين",
+  "IT Operations": "عمليات تقنية المعلومات", "Compliance & Risk": "الامتثال والمخاطر", "Knowledge & Search": "المعرفة والبحث", "App Modernization": "تحديث التطبيقات",
+  Idea: "فكرة", Prototype: "نموذج أولي", Pilot: "تجريبي", Production: "إنتاج",
+};
+
+export const dict = { en, ar };
+export const I18n = createContext({ lang: "en", t: (k) => en[k] ?? k, tx: (s) => s });
+export const useI18n = () => useContext(I18n);
+export const makeI18n = (lang) => ({
+  lang,
+  dir: lang === "ar" ? "rtl" : "ltr",
+  t: (k) => dict[lang][k] ?? en[k] ?? k,
+  tx: (s) => (lang === "ar" ? TAX_AR[s] || s : s),
+  num: (n, o) => new Intl.NumberFormat(lang === "ar" ? "ar-AE" : "en-US", o).format(n || 0),
+  money: (n) => lang === "ar"
+    ? `${new Intl.NumberFormat("ar-AE", { notation: "compact", maximumFractionDigits: 1 }).format(n || 0)} $`
+    : new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", notation: "compact", maximumFractionDigits: 1 }).format(n || 0),
+  date: (d) => new Intl.DateTimeFormat(lang === "ar" ? "ar-AE" : "en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(d)),
+});
