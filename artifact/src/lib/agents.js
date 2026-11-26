@@ -2,6 +2,7 @@
 // capability (no API key). Each step is recorded on the use case so the UI shows it live.
 import { VERTICALS, USE_CASE_TYPES, STAGES, ROI_BENCHMARKS, guessType, guessVerticals } from "./taxonomy.js";
 import { search, stats, graph } from "./core.js";
+import { parseLink } from "./url.js";
 
 export const STEPS = [
   { key: "scout", label: "Scout · reading the link" },
@@ -17,19 +18,22 @@ const strs = (v, n = 8) => (Array.isArray(v) ? v.map((x) => str(x, 80)).filter(B
 const num = (v) => (Number.isFinite(+v) && +v >= 0 ? +v : 0);
 const pick = (v, list, d) => (list.includes(v) ? v : d);
 
-export async function analyse(sample, { url, customer, notes, screenshot }) {
+export async function analyse(sample, { url, customer, customerDetected, notes, screenshot }) {
+  const link = parseLink(url) || {};
   const host = (() => { try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return url; } })();
   const corpus = `${url} ${customer || ""} ${notes || ""}`;
   if (!sample) {
     const type = guessType(corpus), verticals = guessVerticals(corpus);
-    return { title: notes ? notes.split(/[.\n]/)[0].slice(0, 70) : host, title_ar: "", summary: notes || `A ${type.toLowerCase()} prototype.`, summary_ar: "", problem: "", type, secondary_types: [], verticals, stage: "Prototype", capabilities: [], integrations: [], personas: [], tags: [], customer: { name: customer || null }, analyzer: "keyword" };
+    return { title: notes ? notes.split(/[.\n]/)[0].slice(0, 70) : link.screen ? link.screen.replace(" · ", " – ") : host, title_ar: "", summary: notes || `A ${type.toLowerCase()} prototype.`, summary_ar: "", problem: "", type, secondary_types: [], verticals, stage: "Prototype", capabilities: [], integrations: [], personas: [], tags: [], customer: { name: customer || null }, analyzer: "keyword" };
   }
   const prompt = `You are the Analyst agent of UnifyApps' private use-case catalogue. UnifyApps is an enterprise AI, agents and integration platform; it is never the customer.
 Build an executive-ready profile of a prototype from its link${screenshot ? ", the attached screenshot of it" : ""} and the owner's notes. You cannot open the link: infer from the URL words, the screenshot and the notes, and keep claims modest when evidence is thin.
 Write plain, confident business English. Arabic must be natural Modern Standard Arabic.
 
 <link>${url}</link>
-<owner_customer>${customer || "(not given)"}</owner_customer>
+<what_the_link_says>tenant subdomain: ${link.tenant || "(none)"}; environment: ${link.env || "(none)"}; screen: ${link.screen || "(none)"}</what_the_link_says>
+<owner_customer>${customer ? (customerDetected ? `${customer} (read automatically from the link's tenant name, so it may need proper spelling)` : `${customer} (typed by the owner, keep exactly)`) : "(not given)"}</owner_customer>
+In UnifyApps links the tenant subdomain (e.g. emiratesnbd in emiratesnbd.uat.unifyapps.com) is normally the customer; write the organisation's proper name (Emirates NBD). The screen path tells you which part of the product the prototype shows.
 <owner_notes>${notes || "(none)"}</owner_notes>
 
 Reply with only one JSON object with exactly these keys:
@@ -44,7 +48,7 @@ Reply with only one JSON object with exactly these keys:
     type: pick(r.type, USE_CASE_TYPES, guessType(corpus)), secondary_types: strs(r.secondary_types, 2).filter((t) => USE_CASE_TYPES.includes(t)),
     verticals: strs(r.verticals, 4).filter((v) => VERTICALS.includes(v)).concat([]).slice(0, 4), stage: pick(r.stage, STAGES, "Prototype"),
     capabilities: strs(r.capabilities, 6), integrations: strs(r.integrations, 8), personas: strs(r.personas, 3), tags: strs(r.tags, 6),
-    customer: { name: customer || str(r.customer?.name, 80) || null }, analyzer: "claude",
+    customer: { name: (customerDetected ? str(r.customer?.name, 80) || customer : customer || str(r.customer?.name, 80)) || null }, analyzer: "claude",
   };
 }
 

@@ -2,12 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import { useI18n } from "../i18n.js";
 import { api } from "../api.js";
 import Icon from "./Icon.jsx";
+import DashboardArt from "./DashboardArt.jsx";
+import { parseLink } from "../lib/url.js";
 
 export default function LinkDrop({ onCreated, canEdit }) {
   const { t } = useI18n();
   const [url, setUrl] = useState("");
   const [more, setMore] = useState(false);
   const [customer, setCustomer] = useState("");
+  const [typedCustomer, setTypedCustomer] = useState(false);
+  const link = url.trim().length > 4 ? parseLink(url) : null;
+  useEffect(() => { if (!typedCustomer) setCustomer(link?.customer || ""); }, [link?.customer]);
   const [notes, setNotes] = useState("");
   const [confidential, setConfidential] = useState(false);
   const [shot, setShot] = useState(null);
@@ -34,8 +39,8 @@ export default function LinkDrop({ onCreated, canEdit }) {
     setBusy(true); setErr("");
     try {
       const withProto = /^https?:\/\//i.test(url.trim()) ? url.trim() : `https://${url.trim()}`;
-      await api.create({ url: withProto, customer: customer.trim(), notes: notes.trim(), confidential, screenshot: shot });
-      setUrl(""); setCustomer(""); setNotes(""); setConfidential(false); setShot(null); setMore(false);
+      await api.create({ url: withProto, customer: customer.trim(), customerDetected: !typedCustomer && customer.trim() === (link?.customer || ""), notes: notes.trim(), confidential, screenshot: shot });
+      setUrl(""); setCustomer(""); setTypedCustomer(false); setNotes(""); setConfidential(false); setShot(null); setMore(false);
       onCreated();
     } catch (e2) {
       setErr(e2.code === "too_large" ? t("shot_too_large") : e2.message || String(e2.code));
@@ -55,10 +60,26 @@ export default function LinkDrop({ onCreated, canEdit }) {
           </button>
         </div>
       </div>
+      {link && (
+        <div className="link-preview">
+          <div className="link-preview-art">{preview ? <img src={preview} alt="" /> : <DashboardArt uc={{ url: link.href, customer: customer ? { name: customer } : null, type: "" }} />}</div>
+          <div className="link-preview-info">
+            <span className="label">{t("detected")}</span>
+            <div className="multi">
+              {customer
+                ? <span className="pill pill-gold"><Icon name="users" size={12} /> {customer}{!typedCustomer && <span className="muted"> · {t("from_link")}</span>}</span>
+                : <span className="pill">{t("no_customer_in_link")}</span>}
+              {link.env && <span className="pill pill-cyan">{link.env}</span>}
+              {link.screen && <span className="pill pill-violet">{link.screen}</span>}
+            </div>
+            <span className="muted link-host">{link.host}</span>
+          </div>
+        </div>
+      )}
       <button type="button" className="drop-toggle" onClick={() => setMore(!more)} aria-expanded={more}>{more ? "−" : "+"} {t("drop_more")}</button>
       {more && (
         <div className="drop-extra">
-          <input id="drop-customer" className="input" value={customer} onChange={(e) => setCustomer(e.target.value)} placeholder={t("customer_hint")} />
+          <input id="drop-customer" className="input" value={customer} onChange={(e) => { setCustomer(e.target.value); setTypedCustomer(true); }} placeholder={t("customer_hint")} />
           <label className="check"><input id="drop-confidential" type="checkbox" checked={confidential} onChange={(e) => setConfidential(e.target.checked)} /> {t("confidential")}</label>
           <div className="shot-drop full" role="button" tabIndex={0}
             onClick={() => fileRef.current?.click()} onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && fileRef.current?.click()}

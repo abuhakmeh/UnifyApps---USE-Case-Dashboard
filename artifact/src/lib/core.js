@@ -1,5 +1,6 @@
 // Search, aggregates, context graph and customer-name redaction, run in the page.
 import { VERTICALS } from "./taxonomy.js";
+import { parseLink } from "./url.js";
 
 const norm = (s) => String(s || "").toLowerCase();
 const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -7,8 +8,8 @@ const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 export function redact(uc, settings, reveal = false) {
   if (!uc.customer?.name || reveal || !(settings.hideCustomers || uc.confidential)) return uc;
   const name = uc.customer.name;
-  const words = [name, uc.customer.domain, ...name.split(/\s+/).filter((w) => w.length > 4 && /^[A-Z]/.test(w))].filter(Boolean);
-  const re = new RegExp(words.map(escape).join("|"), "gi");
+  const words = [name, uc.customer.domain, parseLink(uc.url || "")?.tenant, ...name.split(/\s+/).filter((w) => w.length > 4 && /^[A-Z]/.test(w))].filter(Boolean);
+  const re = new RegExp(words.filter((w) => w && w.length > 2).map(escape).join("|"), "gi");
   const scrub = (v) => (typeof v === "string" ? v.replace(re, "the client") : Array.isArray(v) ? v.map(scrub) : v);
   return {
     ...uc,

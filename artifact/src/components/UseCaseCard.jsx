@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useI18n } from "../i18n.js";
 import Icon from "./Icon.jsx";
 import { LogoTile, Steps, localized, useCustomerName } from "./common.jsx";
-import Cover from "./Cover.jsx";
+import DashboardArt from "./DashboardArt.jsx";
 
 export default function UseCaseCard({ uc, onOpen }) {
   const { t, tx, lang, money } = useI18n();
@@ -25,7 +25,7 @@ export default function UseCaseCard({ uc, onOpen }) {
     <article ref={ref} className={`card ${processing ? "processing" : ""}`} onMouseMove={onMove} onMouseLeave={onLeave} onClick={() => onOpen(uc.id)} tabIndex={0} onKeyDown={(e) => e.key === "Enter" && onOpen(uc.id)}>
       <div className="card-glare" />
       <div className="card-media">
-        {uc.screenshot ? <img className="shot" src={uc.screenshot} alt="" loading="lazy" /> : <Cover type={uc.type} title={title} />}
+        {uc.screenshot ? <img className="shot" src={uc.screenshot} alt="" loading="lazy" /> : <DashboardArt uc={uc} hidden={uc.customer?.hidden} building={processing} />}
         <div className="card-top">
           <span className="pill">{processing ? <><span className="dot dot-pulse" style={{ color: "var(--cyan)" }} /> {t("processing")}</> : uc.status === "failed" ? <><span className="dot" style={{ color: "var(--red)" }} /> {t("failed")}</> : tx(uc.stage)}</span>
           {uc.example ? <span className="pill">{t("example")}</span> : uc.featured && <span className="pill"><Icon name="star" size={12} /> {t("featured")}</span>}

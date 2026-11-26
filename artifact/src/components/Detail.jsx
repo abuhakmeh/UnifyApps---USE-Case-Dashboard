@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useI18n } from "../i18n.js";
 import { api } from "../api.js";
 import Icon from "./Icon.jsx";
-import Cover from "./Cover.jsx";
+import DashboardArt from "./DashboardArt.jsx";
 import { LogoTile, localized, STEP_LABEL, useCustomerName } from "./common.jsx";
 
 const safeHref = (u) => (typeof u === "string" && (/^https:\/\//i.test(u) || u.startsWith("/_blob/")) ? u : undefined);
@@ -134,16 +134,16 @@ export default function Detail({ id, items, config, canEdit, onClose, toast }) {
   useEffect(() => { api.get(id, editing).then(setUc).catch(() => onClose()); }, [id, editing, items]);
   useEffect(() => { const k = (e) => e.key === "Escape" && onClose(); window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, []);
 
+  const processing = ["queued", "processing"].includes(uc?.status);
   if (!uc) return <><div className="overlay" onClick={onClose} /><aside className="drawer" /></>;
   const roi = uc.roi;
-  const processing = ["queued", "processing"].includes(uc.status);
 
   return (
     <>
       <div className="overlay" onClick={onClose} />
       <aside className="drawer" role="dialog" aria-modal="true" aria-label={uc.title || uc.url}>
         <div className="detail-hero">
-          {uc.screenshot ? <img src={uc.screenshot} alt="" /> : <Cover type={uc.type} big />}
+          {uc.screenshot ? <img src={uc.screenshot} alt="" /> : <DashboardArt uc={uc} hidden={uc.customer?.hidden} building={processing} />}
           <button className="btn btn-icon detail-close" onClick={onClose} aria-label={t("close")}><Icon name="close" /></button>
         </div>
         <div className="detail-head">

@@ -78,7 +78,7 @@ async function runPipeline(id, screenshotBlob) {
     await step("scout", { status: "done", detail: shot ? "Link + screenshot" : "Link and notes (no screenshot)" });
 
     await step("analyst", { status: "running" });
-    const p = await analyse(sample, { url: uc.url, customer: uc.customerHint, notes: uc.ownerNotes, screenshot: shot });
+    const p = await analyse(sample, { url: uc.url, customer: uc.customerHint, customerDetected: uc.customerDetected, notes: uc.ownerNotes, screenshot: shot });
     const cur = items.find((u) => u.id === id);
     const keep = (f, v) => (cur.locked?.includes(f) ? cur[f] : v);
     await save(id, {
@@ -97,9 +97,9 @@ async function runPipeline(id, screenshotBlob) {
     } catch (e) { await step("roi", { status: "failed", detail: e.message || String(e.code) }); }
 
     const c2 = items.find((u) => u.id === id);
-    const name = c2.customerHint || c2.customer?.name || p.customer?.name;
+    const name = (c2.customerDetected ? p.customer?.name || c2.customerHint : c2.customerHint) || c2.customer?.name || p.customer?.name;
     if (name) {
-      await save(id, { customer: { ...(c2.customer || {}), name } });
+      await save(id, { customer: { ...(c2.customer || {}), name }, customerHint: name, customerDetected: false });
       await step("brand", { status: "done", detail: c2.customer?.logo ? `${name} · logo on file` : `${name} · upload a logo on the profile` });
     } else await step("brand", { status: "skipped", detail: "No customer identified" });
 
@@ -125,7 +125,7 @@ export const api = {
   },
   list: async (reveal) => { await start(); return items.map(view(reveal)); },
   get: async (id, reveal) => { await start(); const u = items.find((x) => x.id === id); if (!u) throw new Error("Not found"); return view(reveal)(u); },
-  create: async ({ url, customer, notes, confidential, screenshot }) => {
+  create: async ({ url, customer, customerDetected, notes, confidential, screenshot }) => {
     await start();
     let u; try { u = new URL(url); } catch { throw new Error("That does not look like a valid link"); }
     if (!/^https?:$/.test(u.protocol)) throw new Error("Only http(s) links are supported");
@@ -140,7 +140,7 @@ export const api = {
     const uc = {
       url: u.href, createdAt: now(), updatedAt: now(), status: "queued", title: "", titleAr: "", summary: "", summaryAr: "", problem: "",
       type: "", secondaryTypes: [], verticals: [], stage: "Prototype", capabilities: [], integrations: [], personas: [], tags: [],
-      customer: customer ? { name: customer, logo: null } : null, customerHint: customer || "", ownerNotes: notes || "",
+      customer: customer ? { name: customer, logo: null } : null, customerHint: customer || "", customerDetected: Boolean(customerDetected && customer), ownerNotes: notes || "",
       confidential: Boolean(confidential), featured: false, roi: null, screenshot: shotUrl, screenshotId: shotId, locked: [],
       assets: notes ? [{ id: newId(), kind: "note", title: "Owner notes", text: notes, createdAt: now() }] : [], pipeline: freshPipeline(), analyzer: "",
     };
