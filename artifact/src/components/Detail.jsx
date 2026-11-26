@@ -129,9 +129,12 @@ export default function Detail({ id, items, config, canEdit, onClose, toast }) {
   const custName = useCustomerName();
   const [uc, setUc] = useState(null);
   const [editing, setEditing] = useState(false);
+  const [editUc, setEditUc] = useState(null);
   const [sureDelete, setSureDelete] = useState(false);
 
   useEffect(() => { api.get(id, editing).then(setUc).catch(() => onClose()); }, [id, editing, items]);
+  // The editor must start from the real record, never the anonymised view.
+  useEffect(() => { if (!editing) { setEditUc(null); return; } api.get(id, true).then(setEditUc); }, [id, editing]);
   useEffect(() => { const k = (e) => e.key === "Escape" && onClose(); window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, []);
 
   const processing = ["queued", "processing"].includes(uc?.status);
@@ -170,7 +173,7 @@ export default function Detail({ id, items, config, canEdit, onClose, toast }) {
 
         <div className="detail-body">
           <div className="stack">
-            {editing && <Editor uc={uc} config={config} onDone={(saved) => { setEditing(false); if (saved) toast(t("toast_saved")); }} />}
+            {editing && editUc && <Editor key={editUc.updatedAt} uc={editUc} config={config} onDone={(saved) => { setEditing(false); if (saved) toast(t("toast_saved")); }} />}
             {uc.status === "failed" && <div className="panel notice-error">{uc.error}</div>}
             {uc.problem && <div className="panel"><h3>{t("detail_problem")}</h3><p className="muted" style={{ margin: 0 }}>{uc.problem}</p></div>}
             {uc.capabilities?.length > 0 && <div className="panel"><h3>{t("detail_capabilities")}</h3><div className="multi">{uc.capabilities.map((c) => <span key={c} className="pill">{c}</span>)}</div></div>}

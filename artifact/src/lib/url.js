@@ -1,9 +1,9 @@
 // Reads what a prototype link itself says: the customer tenant, the environment and the screen.
 // UnifyApps links look like https://<tenant>.<env>.unifyapps.com/p/<n>/<section>/<sub>.
 const ENVS = { uat: "UAT", dev: "Dev", qa: "QA", staging: "Staging", stage: "Staging", sandbox: "Sandbox", demo: "Demo", preprod: "Pre-prod", prod: "Production", test: "Test" };
-const GENERIC = new Set(["www", "app", "apps", "api", "auth", "login", "portal", "console", "admin", "platform", "cloud", "my", "web", "static", "cdn", "docs", "help", "go", "studio", "dashboard", "builder", "example", "localhost", "test", "sample", ...Object.keys(ENVS)]);
+const GENERIC = new Set(["www", "app", "apps", "api", "auth", "login", "portal", "console", "admin", "platform", "cloud", "my", "web", "static", "cdn", "docs", "help", "go", "studio", "dashboard", "builder", "tool", "tools", "example", "localhost", "test", "sample", ...Object.keys(ENVS)]);
 const HOSTING = /(vercel\.app|netlify\.app|herokuapp\.com|github\.io|pages\.dev|web\.app|firebaseapp\.com|azurewebsites\.net|onrender\.com|replit\.app|lovable\.app|bolt\.new)$/i;
-const SKIP_PATH = /^(p|app|apps|v\d+|\d+|[a-f0-9-]{16,}|en|ar|home|index(\.html)?|#)$/i;
+const SKIP_PATH = /^(p|b|app|apps|main|preview|agent-api|api|v\d+|\d+|[a-f0-9-]{16,}|app-[a-z0-9]{6,}|[a-z]+-[a-f0-9]{10,}|en|ar|home|index(\.html)?|#)$/i;
 
 const SMALL = new Set(["and", "of", "for", "to", "the", "in"]);
 const ACRONYM = /^(mcp|ai|api|crm|erp|hr|it|kyc|aml|sla|kpi|ocr|sso|qa|uat|ui|ux|faq|rpa|llm|sap|ivr|nbd|adnoc|dewa|sabic|stc)$/i;
@@ -20,8 +20,9 @@ export function parseLink(raw) {
   let tenant = "", env = "";
   if (isUnify) {
     const sub = labels.slice(0, -2);
-    for (const l of sub) if (ENVS[l]) env = ENVS[l];
-    tenant = sub.find((l) => !GENERIC.has(l)) || "";
+    const envOf = (l) => ENVS[l] || ENVS[l.split("-")[0]];
+    for (const l of sub) if (envOf(l)) env = envOf(l);
+    tenant = sub.find((l) => !GENERIC.has(l) && !envOf(l)) || "";
   } else if (HOSTING.test(host)) {
     tenant = labels[0].split(/--|-(?=demo|poc|prototype)/)[0];
   } else {

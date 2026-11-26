@@ -155,6 +155,8 @@ export const api = {
     const patch = {};
     for (const k of ["title", "titleAr", "summary", "summaryAr", "type", "verticals", "stage", "capabilities", "integrations", "confidential", "featured"]) if (k in body) patch[k] = body[k];
     patch.locked = [...new Set([...(uc.locked || []), ...Object.keys(patch).filter((k) => ["title", "titleAr", "summary", "summaryAr", "type", "verticals", "stage"].includes(k))])];
+    // Never let the anonymous label ("Banking client") replace a real customer name.
+    if (body.customer?.name && body.customer.name === `${uc.verticals?.[0] || "Enterprise"} client` && uc.customer?.name !== body.customer.name) delete body.customer;
     if (body.customer !== undefined) { patch.customer = body.customer?.name ? { ...(uc.customer || {}), ...body.customer } : null; patch.customerHint = body.customer?.name || ""; }
     if (body.roi) patch.roi = { ...(uc.roi || {}), ...body.roi, estimatedBy: "owner" };
     return save(id, patch);
